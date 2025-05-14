@@ -36,20 +36,21 @@ export const placeSlice - createSlice({
     },
   
   ],
+  // List of the available locations with their seating and cost numbers
   reducers: {
-   
+   // This function handles incrementing the quantity of a venue item in the state. the state is Audiotrium Hall
     incrementQuantity: (state, action) => {
       const { payload: index } = action;
       if (state[index]) {
         if (state[index].name === " Auditorium Hall (Capacity:200)" && state[index].quantity >= 3) {
-          return;        }
-        state[index].quantity++;
+          return;        } //checks to see if the state is provided with a quantity of 3 or more
+        state[index].quantity++; //otherwise it increases by 1
       }
-    },
+    }, // This function handles decrementing the quantity of a venue item in the state.
     decrementQuantity: (state, action) => {
       const { payload: index } = action;
-      if (state[index] && state[index].quantity > 0) {
-        state[index].quantity--;
+      if (state[index] && state[index].quantity > 0) { //checks if state is provided and greater than 0
+        state[index].quantity--; //if both are met, it will decrease by 1
       }
     },
   },
