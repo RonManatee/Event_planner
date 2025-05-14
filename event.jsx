@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; // MUST IMPORT REQUIRED DEPENDENCIES
 import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
 import { useSelector, useDispatch } from "react-redux";
-import { incrementQuantity, decrementQuantity } from "./venueSlice";
+import { incrementQuantity, decrementQuantity } from "./venueSlice"; // MUST IMPORT REQUIRED DEPENDENCIES
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
-    const venueItems = useSelector((state) => state.venue);
+    const venueItems = useSelector((state) => state.venue); // useSelector() function retrieves venue items from Redux store
     const dispatch = useDispatch();
+    // it calculates the remaining number of available auditorium halls to three, so the user cannot request more
     const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
 
     
@@ -15,14 +16,14 @@ const ConferenceEvent = () => {
         console.log("handleToggleItems called");
         setShowItems(!showItems);
     };
-
-    const handleAddToCart = (index) => {
+// it defines event handlers like handleAddToCart and handleRemoveFromCart to either increase/decrease quantities
+    const handleAddToCart = (index) => { 
         if (venueItems[index].name === "Auditorium Hall (Capacity:200)" && venueItems[index].quantity >= 3) {
           return; 
         }
         dispatch(incrementQuantity(index));
       };
-    
+    // this removes from the cart
       const handleRemoveFromCart = (index) => {
         if (venueItems[index].quantity > 0) {
           dispatch(decrementQuantity(index));
@@ -47,15 +48,19 @@ const ConferenceEvent = () => {
     const ItemsDisplay = ({ items }) => {
 
     };
+    // when buttons are used to add or subtract, system should calculate the cost for all selected rooms
     const calculateTotalCost = (section) => {
-        let totalCost = 0;
+        let totalCost = 0; //starts at 0
         if (section === "venue") {
-          venueItems.forEach((item) => {
-            totalCost += item.cost * item.quantity;
+          venueItems.forEach((item) => { //array represents an item with properties "cost" and "quantity"
+              // ".forEach" iterates over each item in the "venueItems" array. for each item, it multiplies "item.cost"
+              // by "item.quantity" and adds results to "total cost"
+            totalCost += item.cost * item.quantity; //takes one string, added to item then multiplied by amount to get total
           });
         }
-        return totalCost;
-      };
+        return totalCost; // loop will run and retun "totalCost".
+      }; // calculateTotalCost is called with "venue" argument, and calculates total cost for items in "venue" section
+    // result is stored in constant "venueTotalCost" [Continued at line 152]
     const venueTotalCost = calculateTotalCost("venue");
 
     const navigateToProducts = (idType) => {
@@ -144,6 +149,7 @@ const ConferenceEvent = () => {
             </div>
           ))}
         </div>
+         {/* component displayes the total cost of all selected venue items*/}
         <div className="total_cost">Total Cost: ${venueTotalCost}</div>
       </div>
 
