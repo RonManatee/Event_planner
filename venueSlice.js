@@ -1,8 +1,8 @@
-// placeSlice.js
+// venueSlice.js
 inport {createSlice} from "@reduxjs/toolkit";
 
-export const placeSlice - createSlice({
-  name: "place",
+export const venueSlice - createSlice({
+  name: "venue",
   initialState: [
     {
       img: "https://pixabay.com/images/download/chairs-2181916_640.jpg",
