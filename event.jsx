@@ -3,14 +3,16 @@ import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice"; // MUST IMPORT REQUIRED DEPENDENCIES
+import {incrementQuantity, decrementQuantity } from "./avSlice";
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
+    const avItems = useSelector((state) => state.av); //initialized add-ons from ./avSlice.js
     const venueItems = useSelector((state) => state.venue); // useSelector() function retrieves venue items from Redux store
     const dispatch = useDispatch();
     // it calculates the remaining number of available auditorium halls to three, so the user cannot request more
     const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
-
+   
     
     const handleToggleItems = () => {
         console.log("handleToggleItems called");
@@ -30,9 +32,11 @@ const ConferenceEvent = () => {
         }
       };
     const handleIncrementAvQuantity = (index) => {
+        dispatch(incrementAvQuantity(index));
     };
 
     const handleDecrementAvQuantity = (index) => {
+        dispatch(decrementAvQuantity(index));
     };
 
     const handleMealSelection = (index) => {
@@ -44,6 +48,8 @@ const ConferenceEvent = () => {
     };
 
     const items = getItemsFromTotalCost();
+
+    const avTotalCost= calculateTotalCost("av");
 
     const ItemsDisplay = ({ items }) => {
 
@@ -57,6 +63,10 @@ const ConferenceEvent = () => {
               // by "item.quantity" and adds results to "total cost"
             totalCost += item.cost * item.quantity; //takes one string, added to item then multiplied by amount to get total
           });
+        } else if (section == "av") {
+            avItems.forEach((item) => {
+                totalCost += item.cost * item.quantity;
+            });
         }
         return totalCost; // loop will run and retun "totalCost".
       }; // calculateTotalCost is called with "venue" argument, and calculates total cost for items in "venue" section
@@ -195,11 +205,21 @@ const ConferenceEvent = () => {
                         </div>
                     )
                 }
-
-
-
-
+                {avItems.map((item, index) => (// map function to iterate over an array called avItems
+            <div className="av_data venue_main" key={index}>
+                <div className="img">
+                    <img src={item.img} alt={item.name} />
+                </div>
+                    <div className="text"> {item.name} </div>
+                    <div> ${item.name} </div>
+                <div className="addons_btn">
+                    <button className="btn-Warning" onClick={() => handleDecrementAvQuantity(index)}> &ndash; </button>
+                    <span className="quantity-value">{item.quantity}</span>
+                    <button className="btn-success" onClick={() => handleIncrementAvQuantity(index)}> &#43; </button>
+                </div>
             </div>
+        ))}
+                <div className="total_cost">Total Cost: {avTotalCost}</div>
         </>
 
     );
